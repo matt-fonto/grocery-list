@@ -1,7 +1,32 @@
-import React from 'react'
-import { FaEdit, FaTrash } from 'react-icons/fa'
-const List = () => {
-  return <h2>list component</h2>
-}
+import React from "react";
+import { FaEdit, FaTrash } from "react-icons/fa";
+const List = ({ items }) => {
+  return (
+    <div className="grocery-list">
+      {items.map((item) => {
+        const { id, title } = item;
 
-export default List
+        return (
+          // Once we add the items to our list, we will...
+          <article key={id} className="grocery-item">
+            {/* ... add the value of our event object -- what we typed */}
+            <p className="title">{title}</p>
+            {/* ... we will render two buttons, one to edit, other to delete */}
+            <div className="btn-container">
+              {/* Editing button */}
+              <button type="button" className="edit-btn">
+                <FaEdit />
+              </button>
+              {/* Deleting button */}
+              <button type="button" className="delete-btn">
+                <FaTrash />
+              </button>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  );
+};
+
+export default List;
