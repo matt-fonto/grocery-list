@@ -2,9 +2,18 @@ import React, { useState, useEffect } from "react";
 import List from "./List";
 import Alert from "./Alert";
 
+const getLocalStorage = () => {
+  let localData = localStorage.getItem("list");
+
+  // to save the item (localStorage.setItem) we need to transform our object into a string
+  // to get the item (localStorage.setItem) and use it, we need to get it back as an object
+  // that's why we use JSON.parse()
+  return localData ? JSON.parse(localData) : [];
+};
+
 function App() {
   const [text, setText] = useState("");
-  const [list, setList] = useState([]);
+  const [list, setList] = useState(getLocalStorage());
   const [isEditing, setIsEditing] = useState(false);
   const [editID, setEditID] = useState(false);
   //Here, we will pass an object, instead of a boolean value, because we want it to behave differently depending the case
@@ -75,6 +84,16 @@ function App() {
     setEditID(id);
     setText(specificItem.title);
   };
+
+  // once I add items to the list, it goes to the local storage too
+  useEffect(() => {
+    //localStorage has multiple methods, two of them are:
+    // localStorage.getItem = access items in the local storage
+    // localStorage.setItem = add items to the local storage
+    localStorage.setItem("list", JSON.stringify(list)); //key | value
+    // we can't save objects directly to local storage, the value has to be a string
+    // that's why we need to JSON.stringify(object)
+  }, [list]);
 
   return (
     <section className="section-center">
