@@ -23,9 +23,22 @@ function App() {
       showAlert(true, "danger", "I guess you forgot the value");
     } else if (text && isEditing) {
       // deal with edit
+      setList(
+        list.map((item) => {
+          if (item.id === editID) {
+            return { ...item, title: text };
+          }
+          return item;
+        })
+      );
+      setText("");
+      setEditID(null);
+      setIsEditing(false);
+      showAlert(true, "success", "Item edited");
     } else {
       // here, we're adding items to our list
       // show alert
+      showAlert(true, "success", "Item added to the list");
       // add item to the list
       const newItem = { id: new Date().getTime().toString(), title: text };
       // here we have our setList, passing all the previous value + the new one
@@ -40,11 +53,34 @@ function App() {
     setAlert({ show, type, msg });
   };
 
+  const clearList = () => {
+    showAlert(true, "danger", "List emptied");
+    setList([]);
+  };
+
+  // removing the specific item
+  const removeItem = (id) => {
+    // we show a message
+    showAlert(true, "danger", "Item removed");
+    // we filter the list
+    let filteredList = list.filter((item) => item.id !== id);
+    // we pass the new list to the setList
+    setList(filteredList);
+  };
+
+  // editing the item
+  const editItem = (id) => {
+    const specificItem = list.find((item) => item.id === id);
+    setIsEditing(true);
+    setEditID(id);
+    setText(specificItem.title);
+  };
+
   return (
     <section className="section-center">
       <form className="grocery-form" onSubmit={handleSubmit}>
         {/* If alert.show (our useState object) is true, then show the alert component */}
-        {alert.show && <Alert {...alert} removeAlert={showAlert} />}
+        {alert.show && <Alert {...alert} removeAlert={showAlert} list={list} />}
         <h3>Grocery Bud</h3>
         <div className="form-control">
           <input
@@ -66,8 +102,10 @@ function App() {
       {list.length > 0 && (
         <div className="grocery-container">
           {/* We pass our list items as props to our component */}
-          <List items={list} />
-          <button className="clear-btn">Clear Items</button>
+          <List items={list} removeItem={removeItem} editItem={editItem} />
+          <button className="clear-btn" onClick={clearList}>
+            Clear Items
+          </button>
         </div>
       )}
     </section>

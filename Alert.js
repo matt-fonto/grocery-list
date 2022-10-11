@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-const Alert = ({ type, msg, removeAlert }) => {
+const Alert = ({ type, msg, removeAlert, list }) => {
   // this is where we remove the alert after 3s
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -9,7 +9,7 @@ const Alert = ({ type, msg, removeAlert }) => {
     }, 3000);
 
     return () => clearTimeout(timeout);
-  }, []);
+  }, [list]); // it renders when the list is updated
 
   return (
     <div>
